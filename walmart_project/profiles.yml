@@ -1,0 +1,11 @@
+walmart_project:
+  outputs:
+    dev:
+      catalog: walmart
+      host: dbc-5f85ff12-79d4.cloud.databricks.com
+      http_path: /sql/1.0/warehouses/9507c1cd30d2ecf1
+      schema: dbt_schema
+      threads: 1
+      token: dapi191303a848e6bfffb77082aedb9f2a72
+      type: databricks
+  target: dev
