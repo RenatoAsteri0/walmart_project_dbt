@@ -6,6 +6,6 @@ walmart_project:
       http_path: /sql/1.0/warehouses/9507c1cd30d2ecf1
       schema: dbt_schema
       threads: 1
-      token: dapi191303a848e6bfffb77082aedb9f2a72
+      token: 
       type: databricks
   target: dev

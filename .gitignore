@@ -1,10 +1,17 @@
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+# .dbtignore
 
-# Virtual environments
-.venv
+# ignore individual .py files
+not-a-dbt-model.py
+another-non-dbt-model.py
+
+# ignore all .py files
+**.py
+
+# ignore all .py files with "codegen" in the filename
+*codegen*.py
+
+# ignore all folders in a directory
+walmart_project/*
+
+# ignore some folders in a directory
+path/to/folders/subfolder/**
