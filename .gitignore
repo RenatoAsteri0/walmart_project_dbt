@@ -11,7 +11,4 @@ another-non-dbt-model.py
 *codegen*.py
 
 # ignore all folders in a directory
-walmart_project/*
-
-# ignore some folders in a directory
-path/to/folders/subfolder/**
+walmart_project/profiles.yml
