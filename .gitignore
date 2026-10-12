@@ -6,7 +6,7 @@ another-non-dbt-model.py
 
 airflow/walmart_project/profiles.yml
 # ignore all folders in a directory
-walmart_project/
+/walmart_project/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
