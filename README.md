@@ -164,10 +164,7 @@ The Silver Technical layer standardizes and prepares source data for downstream 
 
 Its responsibilities include:
 
-- Selecting and standardizing technical columns.
-- Preparing source entities for reuse.
-- Applying technical transformations.
-- Establishing a consistent foundation for business logic.
+- Applying technical transformations (processed_at column).
 
 ### Silver Business (`silver_b`)
 <img width="1746" height="906" alt="Screenshot 2026-10-18 113059" src="https://github.com/user-attachments/assets/101a03c5-e36e-4a8c-b3a1-5463beab6d0a" />
