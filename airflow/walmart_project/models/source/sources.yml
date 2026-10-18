@@ -1,7 +1,18 @@
 sources:
   - name: walmart_databricks
-    database: walmart  
-    schema: bronze  
+    database: walmart
+    schema: bronze
+
+    config:
+      loaded_at_field: updated_timestamp
+      freshness:
+        warn_after:
+          count: 2
+          period: day
+        error_after:
+          count: 2
+          period: day
+
     tables:
       - name: orders
       - name: customers

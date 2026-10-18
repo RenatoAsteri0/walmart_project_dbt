@@ -6,8 +6,8 @@ import time
 import pendulum
 from dotenv import load_dotenv
 from os import getenv
-
 load_dotenv()
+
 @dag(
     dag_id = 'orchestrate',
     schedule = '0 11 * * *',
@@ -27,7 +27,11 @@ def orchestrate():
         while True:
             job_run = w.jobs.get_run(job_trigger.run_id)
             print(f'Job run status: {job_run.state.life_cycle_state}, result: {job_run.state.result_state}')
-            if job_run.state.life_cycle_state in [RunLifeCycleState.TERMINATED, RunLifeCycleState.INTERNAL_ERROR, RunLifeCycleState.PENDING]:
+            if job_run.state.life_cycle_state in [
+                RunLifeCycleState.TERMINATED,
+                RunLifeCycleState.INTERNAL_ERROR,
+                RunLifeCycleState.SKIPPED,
+            ]:
                 if job_run.state.result_state == RunResultState.SUCCESS:
                     print("Job completed successfully!")
                     break
@@ -46,7 +50,8 @@ def orchestrate():
     silver_technical = BashOperator(
         task_id = "silver_technical",
         cwd = '/opt/airflow/walmart_project',
-        bash_command = "dbt run --select silver_t"
+        bash_command = "dbt run --select silver_t",
+        trigger_rule='all_done'
     )
 
     silver_technical_tests = BashOperator(
@@ -66,12 +71,6 @@ def orchestrate():
         bash_command = "dbt test --select silver_b"
     )
 
-    gold_ephermeral = BashOperator(
-        task_id = 'gold_ephermeral',
-        cwd = '/opt/airflow/walmart_project',
-        bash_command = "dbt run --select gold/ephermeral"
-    )
-
     gold_dimensions = BashOperator(
         task_id = 'gold_dimensions',
         cwd = '/opt/airflow/walmart_project',
@@ -81,9 +80,9 @@ def orchestrate():
     gold_facts = BashOperator(
         task_id = 'gold_facts',
         cwd = '/opt/airflow/walmart_project',
-        bash_command = "dbt run --select gold/facts"
+        bash_command = "dbt run --select path:models/gold/fact"
     )
 
-    ingest_cdc() >> clean_unuse_files() >> source_freshness() >> silver_technical >> silver_technical_tests >> silver_business >> silver_business_tests >> gold_ephermeral >> gold_dimensions >> gold_facts
+    ingest_cdc() >> clean_unuse_files() >> source_freshness() >> silver_technical >> silver_technical_tests >> silver_business >> silver_business_tests >> gold_dimensions >> gold_facts
 
 orchestrate_dag = orchestrate()
