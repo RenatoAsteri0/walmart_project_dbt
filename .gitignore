@@ -227,3 +227,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Airflow local configuration and generated logs
+airflow/config/airflow.cfg
+airflow/logs/
