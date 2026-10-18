@@ -20,7 +20,7 @@ End-to-end data engineering laboratory built around a fictional Walmart dataset.
 flowchart TD
     A[Neon / PostgreSQL<br/>Synthetic source tables] --> B[Databricks ingestion pipeline<br/>Query-based capture]
     B --> C[Bronze<br/>walmart.bronze]
-    C --> D[dbt source freshness]
+    C --> D[dbt freshness]
     D --> E[Silver Technical<br/>silver_t]
     E --> F[dbt tests]
     F --> G[Silver Business<br/>silver_b]
@@ -41,7 +41,7 @@ The Airflow DAG `orchestrate` runs these steps in sequence:
 
 1. **Ingest:** trigger the Databricks ingestion job and wait for its final state.
 2. **Clean generated dbt artifacts:** remove the local `target` and `logs` directories.
-3. **Freshness:** run the dbt source freshness check.
+3. **Freshness:** run `dbt freshness` to check source recency.
 4. **Silver Technical:** execute `dbt run --select silver_t`, followed by its tests.
 5. **Silver Business:** execute `dbt run --select silver_b`, followed by its tests.
 6. **Gold dimensions:** execute dbt snapshots to maintain historical versions of selected entities.
@@ -93,7 +93,7 @@ The `dim_orders` snapshot was rebuilt after a Delta MERGE failure caused by mult
 
 ## Freshness and synthetic data
 
-dbt source freshness is configured in `models/source/sources.yml` using `updated_timestamp`. Freshness evaluates the age of the most recent value in that field against configured warning/error thresholds.
+dbt freshness is configured in `models/source/sources.yml` using `updated_timestamp`. Freshness evaluates the age of the most recent value in that field against configured warning/error thresholds.
 
 Because this is a lab with synthetic records, source timestamps do not necessarily advance naturally. Synthetic updates were used to exercise freshness behavior and validate orchestration. In a production system, freshness thresholds should reflect the source's expected update cadence and business SLA; a successful Airflow run alone does not prove that source data is fresh.
 
@@ -156,7 +156,7 @@ This repository depends on external services and credentials; configure them loc
 4. Validate the dbt project from its directory:
    ```bash
    dbt debug
-   dbt source freshness
+   dbt freshness
    dbt run --select silver_t
    dbt test --select silver_t
    dbt run --select silver_b
